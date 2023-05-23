@@ -33,3 +33,4 @@ build/
 .vscode/
 
 .history
+node_modules

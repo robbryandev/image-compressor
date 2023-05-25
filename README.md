@@ -10,20 +10,22 @@
 
 ### Development Commands
 
-install packages
+- Api
+  run spring app
+
+```bash
+mvn spring-boot:run
+```
+
+- Client
+  install packages
 
 ```bash
 npm i
 ```
 
-run postcss build watcher for tailwind
+run client
 
 ```bash
-npm run postcss:watch
-```
-
-run spring app
-
-```bash
-mvn spring-boot:run
+npm start
 ```

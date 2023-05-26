@@ -1,4 +1,4 @@
-# Image Compressor (WIP)
+# Image Compressor
 
 ## Setup
 

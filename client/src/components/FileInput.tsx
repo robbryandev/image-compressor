@@ -19,15 +19,12 @@ export default function FileInput() {
     fetch("/api/upload", {
       method: "POST",
       body: formData,
-    }).then((res) =>
-      res.json().then((jres) => {
-        console.log(jres);
-        setTimeout(() => {
-          download(dataRef, jres["name"], jres["file"]);
-          setLoading(false);
-        }, 1500);
-      })
-    );
+    }).then((res) => {
+      res.blob().then((data) => {
+        download(dataRef, `min_${files[0].name}`, data);
+        setLoading(false);
+      });
+    });
   };
 
   return (

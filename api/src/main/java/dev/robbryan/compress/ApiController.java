@@ -6,15 +6,11 @@ import java.util.Base64;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import java.lang.ProcessBuilder;
 import java.lang.Process;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.stereotype.Controller;
 
@@ -30,20 +26,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.Resource;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import org.springframework.util.FileCopyUtils;
 
 @Controller
 @RestController
 @RequestMapping("/api")
 public class ApiController {
-  private ObjectMapper mapper = new ObjectMapper();
-
   @Autowired
   private ResourceLoader resourceLoader;
 
   @PostMapping("/upload")
-  public ObjectNode uploadFile(@RequestParam("file") MultipartFile file) {
-    ObjectNode map = mapper.createObjectNode();
+  public ResponseEntity<byte[]> uploadFile(@RequestParam("file") MultipartFile file) {
     try {
       Resource resource = resourceLoader.getResource("classpath:static/");
       File newFile = new File(resource.getFile(), file.getOriginalFilename());
@@ -66,24 +64,21 @@ public class ApiController {
         try {
           int exitCode = process.exitValue();
           if (exitCode == 0) {
-            map.put("msg", "File uploaded successfully");
             byte[] fileBytes = Files.readAllBytes(Paths.get(replaceFilePath));
-            String fileBytesString = new String(encode(fileBytes), StandardCharsets.ISO_8859_1);
-            System.out.println("FileBytes: " + fileBytesString);
-            map.put("file", fileBytesString);
-            map.put("name", "min_" + newFileName);
-          } else {
-            map.put("msg", "File upload failed");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "filename.ext");
+            isDone = true;
+            return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
           }
-          isDone = true;
         } catch (IllegalThreadStateException e) {
           // Process is still running
           Thread.sleep(1000);
         }
       }
     } catch (Exception e) {
-      map.put("msg", "File upload failed");
+      System.out.println(e.toString());
     }
-    return map;
+    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

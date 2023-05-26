@@ -1,0 +1,14 @@
+services:
+  client:
+    build: ./client/
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+  api:
+    build: ./api/
+    ports:
+      - "8080:8080"
+networks:
+  default:
+    name: compressor_network
+    driver: compressor_network

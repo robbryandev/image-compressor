@@ -7,6 +7,7 @@
 - java jdk >= 1.17
 - apache maven = latest
 - nodejs >= 16.x
+- ffmpeg = latest
 
 ### Development Commands
 

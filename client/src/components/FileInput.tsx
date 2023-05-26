@@ -1,8 +1,10 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import LoadingBar from "./LoadingBar";
+import download from "../utils/download";
 
 export default function FileInput() {
   const [loading, setLoading] = useState<Boolean>(false);
+  const dataRef = useRef<HTMLDivElement>(null);
   const handleUpload = (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -21,6 +23,7 @@ export default function FileInput() {
       res.json().then((jres) => {
         console.log(jres);
         setTimeout(() => {
+          download(dataRef, jres["name"], jres["file"]);
           setLoading(false);
         }, 1500);
       })
@@ -29,6 +32,7 @@ export default function FileInput() {
 
   return (
     <div className="space-y-4">
+      <div id="download-spot" ref={dataRef}></div>
       {loading && <LoadingBar />}
       <form onSubmit={handleUpload}>
         <input

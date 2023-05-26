@@ -11,14 +11,16 @@
 ### Development Commands
 
 - Api
-  run spring app
+
+run spring app
 
 ```bash
 mvn spring-boot:run
 ```
 
 - Client
-  install packages
+
+install packages
 
 ```bash
 npm i

@@ -43,8 +43,7 @@ public class ApiController {
   @PostMapping("/upload")
   public ResponseEntity<byte[]> uploadFile(@RequestParam("file") MultipartFile file) {
     try {
-      Resource resource = resourceLoader.getResource("classpath:static/");
-      File newFile = new File(resource.getFile(), file.getOriginalFilename());
+      File newFile = new File("/app/images/", file.getOriginalFilename());
       FileCopyUtils.copy(file.getBytes(), newFile);
       String newFilePath = newFile.getAbsolutePath();
       String newFileName = newFile.getName();

@@ -68,6 +68,9 @@ public class ApiController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", "filename.ext");
+            File repFile = new File(replaceFilePath);
+            newFile.delete();
+            repFile.delete();
             isDone = true;
             return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
           }

@@ -1,6 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
 import LoadingBar from "./LoadingBar";
 import download from "../utils/download";
+import Swal from "sweetalert2";
 
 export default function FileInput() {
   const [loading, setLoading] = useState<Boolean>(false);
@@ -20,10 +21,19 @@ export default function FileInput() {
       method: "POST",
       body: formData,
     }).then((res) => {
-      res.blob().then((data) => {
-        download(dataRef, `min_${files[0].name}`, data);
+      if (res.ok) {
+        res.blob().then((data) => {
+          download(dataRef, `min_${files[0].name}`, data);
+          setLoading(false);
+        });
+      } else {
         setLoading(false);
-      });
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong when compressing your file",
+        });
+      }
     });
   };
 

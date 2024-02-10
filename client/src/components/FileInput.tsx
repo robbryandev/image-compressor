@@ -16,7 +16,7 @@ export default function FileInput() {
         formData.append("file", files[i]);
       }
     }
-    fetch("/api/upload", {
+    fetch("http://api:8080/api/upload", {
       method: "POST",
       body: formData,
     }).then((res) => {

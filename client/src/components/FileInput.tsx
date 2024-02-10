@@ -16,7 +16,7 @@ export default function FileInput() {
         formData.append("file", files[i]);
       }
     }
-    fetch("http://api:8080/api/upload", {
+    fetch("http://localhost:8080/api/upload", {
       method: "POST",
       body: formData,
     }).then((res) => {
@@ -24,6 +24,8 @@ export default function FileInput() {
         download(dataRef, `min_${files[0].name}`, data);
         setLoading(false);
       });
+    }).catch((err) => {
+      console.log(`post error: ${err}`)
     });
   };
 
